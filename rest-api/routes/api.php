@@ -19,4 +19,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/animals', AnimalController::class)->name('index');
+//menampilkan seluruh nama hewan
+Route::get('/animals', [AnimalController::class,'index']);
+
+//route untuk menambahkan nama hewan
+Route::post('/animals', [AnimalController::class,'store']);
+
+//route untuk mengedit nama hewan
+Route::put('/animals/{id}', [AnimalController::class,'update']);
+
+//route untuk menghapus nama hewan
+Route::delete('/animals/{id}', [AnimalController::class,'destroy']);

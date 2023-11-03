@@ -8,19 +8,35 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
     //membuat method menampilkan data student
-    public function index(){
+    public function index()
+    {
         $students = Student::all();
+
+        if ($students->isEmpty()) {
+            $data = [
+                'message' => 'resource is empty'
+            ];
+            return response()->json($data, 204);
+        }
 
         $data = [
             'message' => 'Get all Student',
             'data' => $students
         ];
 
-        return response()->json($data,200);
+        return response()->json($data, 200);
     }
+
 
     //membuat method menambahkan data student
     public function store(request $request){
+        request()->validate([
+            'nama'=> 'required',
+            'nim'=> 'required',
+            'email'=> 'required|email',
+            'jurusan' => 'required',
+        ]);
+
         $input = [
             'nama'=> $request->nama,
             'nim'=> $request->nim,
@@ -43,6 +59,7 @@ class StudentController extends Controller
     {
         $student = Student::find($id);
 
+
         if (!$student) {
             $data = [
                 'message' => 'Student not found',
@@ -52,10 +69,10 @@ class StudentController extends Controller
 
         // Update student data with the request input
         $input = [
-            'nama' => $request->input('nama', $student->nama),
-            'nim' => $request->input('nim', $student->nim),
-            'email' => $request->input('email', $student->email),
-            'jurusan' => $request->input('jurusan', $student->jurusan),
+            'nama' => $request->nama ?? $student->nama,
+            'nim' => $request->nim ?? $student->nim,
+            'email' => $request->email ?? $student->email,
+            'jurusan' => $request->jurusan ?? $student->jurusan,
         ];
 
         $student->update($input);
@@ -90,5 +107,24 @@ class StudentController extends Controller
         return response()->json($data, 200);
     }
 
+    public function show($id){
+        $student = Student::find($id);
+
+        if ($student) {
+            $data = [
+                'message'=> 'Get detail student',
+                'data'=> $student,
+            ];
+
+            return response()->json($data, 200);
+        }
+        else {
+            $data = [
+                'message'=> 'Student not found',
+            ];
+
+            return response()->json($data, 404);
+        }
+    }
 
 }

@@ -45,3 +45,6 @@ Route::put('/students/{id}', [StudentController::class,'update']);
 
 //hapus data student
 Route::delete('/students/{id}', [StudentController::class,'destroy']);
+
+//dapatkan detail data
+Route::get('/students/{id}', [StudentController::class,'show']);
